@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/POJ1182.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ1703.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ1018.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ1488.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ1611.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ1328.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ1573.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ2049.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ1163.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ3278.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/POJ3349.cpp" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file://C:/MinGW/lib/gcc/mingw32/4.8.1/include" />
+          <root url="file://C:/MinGW/lib/gcc/mingw32/4.8.1/include-fixed" />
+          <root url="file://C:/MinGW/include" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file://C:/MinGW/lib/gcc/mingw32/4.8.1/include" />
+          <root url="file://C:/MinGW/lib/gcc/mingw32/4.8.1/include-fixed" />
+          <root url="file://C:/MinGW/include" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
