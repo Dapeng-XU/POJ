@@ -14,5 +14,5 @@
  * 2017/02/27    POJ1328    [Graph]: It can pass all the given tests, but got a "WA" when commit to the judge platform.
  * 2017/03/12    POJ1018    [Dynamic Programming]: Lack of an idea.
  * 2017/03/12    POJ1050    [Dynamic Programming]: Lack of an idea.
- *
+ * 2017/03/12    POJ1088    [Dynamic Programming]: Tried of it, although my thought is ready.
  */

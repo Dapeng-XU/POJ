@@ -5,18 +5,20 @@
 #define USING_1088
 #ifdef USING_1088
 
+/* WARNING: The length of the longest path MAY NOT START FROM the HIGHEST point or
+ * END AT the LOWEST point!
+ */
+
 #include <cstdio>
 #include <climits>
-#include <cstdlib>
-#include <vector>
+#include <queue>
 
 using namespace std;
 
-const int dimension = 120;
+const int dimension = 200;
 
 int map[dimension][dimension];
 int dp[dimension][dimension];
-int visited[dimension][dimension];
 
 int C, R;
 
@@ -29,72 +31,7 @@ struct coord {
     }
 };
 
-coord minloc, maxloc;
-
-int search(const coord &c) {
-    printf("search(%d, %d)\n", c.y, c.x);
-//    system("pause");
-    if (dp[c.y][c.x] != INT_MAX) {
-        return dp[c.y][c.x];
-    } else if (c.x == minloc.x && c.y == minloc.y) {
-        dp[c.y][c.x] = 0;
-        return 0;
-    }
-    int farestLength = INT_MIN;
-    coord farestCoord;
-    if (c.x != 0) { // left node
-        coord c2(c.y, c.x - 1);
-        if (dp[c2.y][c2.x] == INT_MIN && visited[c2.y][c2.x] == 0) {
-            visited[c2.y][c2.x] = 1;
-            search(c2);
-        }
-        if (dp[c2.y][c2.x] > farestLength) {
-            farestLength = dp[c2.y][c2.x];
-            farestCoord.x = c2.x;
-            farestCoord.y = c2.y;
-        }
-    }
-    if (c.y != 0) { // above node
-        coord c2(c.y - 1, c.x);
-        if (dp[c2.y][c2.x] == INT_MIN && visited[c2.y][c2.x] == 0) {
-            visited[c2.y][c2.x] = 1;
-            search(c2);
-        }
-        if (dp[c2.y][c2.x] > farestLength) {
-            farestLength = dp[c2.y][c2.x];
-            farestCoord.x = c2.x;
-            farestCoord.y = c2.y;
-        }
-    }
-    if (c.x != C - 1) { // right node
-        coord c2(c.y, c.x + 1);
-        if (dp[c2.y][c2.x] == INT_MIN && visited[c2.y][c2.x] == 0) {
-            visited[c2.y][c2.x] = 1;
-            search(c2);
-        }
-        if (dp[c2.y][c2.x] > farestLength) {
-            farestLength = dp[c2.y][c2.x];
-            farestCoord.x = c2.x;
-            farestCoord.y = c2.y;
-        }
-    }
-    if (c.y != R - 1) { // following node
-        coord c2(c.y + 1, c.x);
-        if (dp[c2.y][c2.x] == INT_MIN && visited[c2.y][c2.x] == 0) {
-            visited[c2.y][c2.x] = 1;
-            search(c2);
-        }
-        if (dp[c2.y][c2.x] > farestLength) {
-            farestLength = dp[c2.y][c2.x];
-            farestCoord.x = c2.x;
-            farestCoord.y = c2.y;
-        }
-    }
-    int tmp = dp[farestCoord.y][farestCoord.x] + 1;
-    dp[c.y][c.x] = tmp;
-    printf("%d  ", tmp);
-    return tmp;
-}
+vector<coord> minlist, maxlist;
 
 int main() {
     int minval = INT_MAX, maxval = INT_MIN;
@@ -103,36 +40,68 @@ int main() {
         for (int j = 0; j < C; j++) {
             int tmp;
             scanf("%d", &tmp);
-            if (minval > tmp) {
-                minval = tmp;
-                minloc.x = j;
-                minloc.y = i;
-            }
-            if (maxval < tmp) {
-                maxval = tmp;
-                maxloc.x = j;
-                maxloc.y = i;
-            }
-            map[i][j] = tmp;
         }
     }
     for (int i = 0; i < R; i++) {
         for (int j = 0; j < C; j++) {
-            dp[i][j] = INT_MIN;
-        }
-    }
-    for (int i = 0; i < R; i++) {
-        for (int j = 0; j < C; j++) {
-            visited[i][j] = 0;
+            dp[i][j] = INT_MIN; // row-major
         }
     }
     if (C == 1 && R == 1) {
-        printf("0");
+        printf("1");
     } else {
-        int tmp;
-        visited[maxloc.y][maxloc.x] = 1;
-        tmp = search(maxloc);
-        printf("%d", &tmp);
+        queue<coord> q;
+//        while (!minlist.empty()) {
+//            coord minloc = minlist.back();
+//            minlist.pop_back();
+//            q.push(minloc);
+////            printf("(%d, %d)\n", minloc.y, minloc.x);
+//            dp[minloc.y][minloc.x] = 0;
+//        }
+        while (!q.empty()) {
+            coord c = q.front();
+            q.pop();
+            int cur = dp[c.y][c.x], *tmp;
+//            printf("(%d, %d, %d, %d)  ", c.y, c.x, cur, dp[c.y][c.x]);
+            if (c.x != 0) {
+                tmp = &dp[c.y][c.x - 1];
+                if (*tmp < cur + 1 && map[c.y][c.x - 1] < map[c.y][c.x]) {
+                    *tmp = cur + 1;
+                    q.push(coord(c.x - 1, c.y));
+                }
+            }
+            if (c.x != C - 1) {
+                tmp = &dp[c.y][c.x + 1];
+                if (*tmp < cur + 1 && map[c.y][c.x + 1] < map[c.y][c.x]) {
+                    *tmp = cur + 1;
+                    q.push(coord(c.x + 1, c.y));
+                }
+            }
+            if (c.y != 0) {
+                tmp = &dp[c.y - 1][c.x];
+                if (*tmp < cur + 1 && map[c.y - 1][c.x] < map[c.y][c.x]) {
+                    *tmp = cur + 1;
+                    q.push(coord(c.x, c.y - 1));
+                }
+            }
+            if (c.y != R - 1) {
+                tmp = &dp[c.y + 1][c.x];
+                if (*tmp < cur + 1 && map[c.y + 1][c.x] < map[c.y][c.x]) {
+                    *tmp = cur + 1;
+                    q.push(coord(c.x, c.y + 1));
+                }
+            }
+        }
+        int tmp = INT_MIN;
+//        while (!maxlist.empty()) {
+//            coord maxloc = maxlist.back();
+//            maxlist.pop_back();
+//            if (tmp < dp[maxloc.y][maxloc.x]) {
+//                tmp = dp[maxloc.y][maxloc.x];
+//            }
+//        }
+        tmp++;
+        printf("%d", tmp);
     }
     return 0;
 }
@@ -149,8 +118,30 @@ Sample Input
 15 24 25 20 7
 14 23 22 21 8
 13 12 11 10 9
+
 Sample Output
 
 25
+
+Input: 4 4 1 0 5 6 2 3 4 7 15 16 14 8 13 12 11 10
+Output: 15
+
+Input: 1 1 37
+Output: 1
+
+Input: 2 3 1 2 5 6 3 4
+Output: 4
+
+Input: 3 2 1 2 5 6 3 4
+Output: 3
+
+Input: 5 5  5 5 5 5 5 5 4 4 4 5 5 4 1 4 5 5 4 4 4 5 5 5 5 5 5
+Output: 3
+
+Input: 5 5  1 1 1 1 1 1 4 4 4 1 1 4 5 4 1 1 4 4 4 1 1 1 1 1 1
+Output: 3
+
+Input: 3 5  1 4 5 6 1 4 5 4 7 5 4 4 1 3 2
+Output: 5
 
 */
